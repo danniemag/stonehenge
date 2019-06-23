@@ -16,3 +16,6 @@ config :stonehenge, Stonehenge.Repo,
   database: "stonehenge_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Bcrypt config speed up process by easing security
+config :bcrypt_elixir, :log_rounds, 4
