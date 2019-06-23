@@ -6,9 +6,9 @@ defmodule Stonehenge.AuthTest do
   describe "users" do
     alias Stonehenge.Auth.User
 
-    @valid_attrs %{balance: 120.5, email: "some email", is_active: true}
-    @update_attrs %{balance: 456.7, email: "some updated email", is_active: false}
-    @invalid_attrs %{balance: nil, email: nil, is_active: nil}
+    @valid_attrs %{balance: 120.5, email: "some email", is_active: true, password: "some password"}
+    @update_attrs %{balance: 456.7, email: "some updated email", is_active: false, password: "some updated password"}
+    @invalid_attrs %{balance: nil, email: nil, is_active: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -21,12 +21,12 @@ defmodule Stonehenge.AuthTest do
 
     test "list_users/0 returns all users" do
       user = user_fixture()
-      assert Auth.list_users() == [user]
+      assert Auth.list_users() == [%User{user | password: nil}]
     end
 
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
-      assert Auth.get_user!(user.id) == user
+      assert Auth.get_user!(user.id) == %User{user | password: nil}
     end
 
     test "create_user/1 with valid data creates a user" do
@@ -34,6 +34,7 @@ defmodule Stonehenge.AuthTest do
       assert user.balance == 120.5
       assert user.email == "some email"
       assert user.is_active == true
+      assert Bcrypt.verify_pass("some password", user.password_hash)
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -46,12 +47,14 @@ defmodule Stonehenge.AuthTest do
       assert user.balance == 456.7
       assert user.email == "some updated email"
       assert user.is_active == false
+      assert Bcrypt.verify_pass("some updated password", user.password_hash)
     end
 
     test "update_user/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Auth.update_user(user, @invalid_attrs)
-      assert user == Auth.get_user!(user.id)
+      assert %User{user | password: nil} == Auth.get_user!(user.id)
+      assert Bcrypt.verify_pass("some password", user.password_hash)
     end
 
     test "delete_user/1 deletes the user" do
