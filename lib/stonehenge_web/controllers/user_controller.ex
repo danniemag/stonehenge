@@ -56,4 +56,32 @@ defmodule StonehengeWeb.UserController do
         |> render(StonehengeWeb.ErrorView, "401.json", message: message)
     end
   end
+
+  def withdrawal(conn, %{"value" => value}) do
+    cond do
+      user = Auth.get_user!(get_session(conn, :current_user_id)) ->
+        cond do
+          user.balance >= value -> {:ok, perform_withdrawal(conn, value, user)}
+        end
+        insufficient_balance()
+    end
+    conn
+      |> delete_session(:current_user_id)
+      |> put_status(:unauthorized)
+      |> render(StonehengeWeb.ErrorView, "401.json", message: "No user logged!")
+  end
+
+
+  # Helper methods - No routes
+  def perform_withdrawal(conn, value, user) do
+    user
+      |> Ecto.Changeset.change(%{balance: user.balance - value})
+      |> Stonehenge.Repo.update()
+      user = Auth.get_user!(user.id)
+      render conn, "withdrawal.json", value: value, user: user
+  end
+
+  def insufficient_balance() do
+    render(StonehengeWeb.ErrorView, "203.json", message: "Insufficient balance to perform this operation.")
+  end
 end

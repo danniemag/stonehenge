@@ -18,6 +18,7 @@ defmodule StonehengeWeb.Router do
   scope "/api", StonehengeWeb do
     pipe_through [:api, :api_auth]
     resources "/users", UserController, except: [:new, :edit]
+    post "/users/withdrawal", UserController, :withdrawal
   end
 
   defp ensure_authenticated(conn, _opts) do
