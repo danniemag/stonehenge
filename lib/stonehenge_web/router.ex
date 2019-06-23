@@ -7,5 +7,6 @@ defmodule StonehengeWeb.Router do
 
   scope "/api", StonehengeWeb do
     pipe_through :api
+    resources "/users", UserController, except: [:new, :edit]
   end
 end
