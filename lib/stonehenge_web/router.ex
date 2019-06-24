@@ -21,8 +21,9 @@ defmodule StonehengeWeb.Router do
     get "/users/balance", UserController, :balance
     put "/users/withdrawal", UserController, :withdrawal
     put "/users/transfer", UserController, :transfer
+    get "/backoffice", HistoryController, :backoffice
     resources "/users", UserController, except: [:new, :edit]
-
+    resources "/histories", HistoryController, only: [:index]
   end
 
   defp ensure_authenticated(conn, _opts) do
