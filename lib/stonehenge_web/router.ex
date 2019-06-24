@@ -20,6 +20,7 @@ defmodule StonehengeWeb.Router do
     pipe_through [:api, :api_auth]
     get "/users/balance", UserController, :balance
     put "/users/withdrawal", UserController, :withdrawal
+    put "/users/transfer", UserController, :transfer
     resources "/users", UserController, except: [:new, :edit]
 
   end

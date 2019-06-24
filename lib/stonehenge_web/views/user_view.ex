@@ -53,4 +53,15 @@ defmodule StonehengeWeb.UserView do
       }
     }
   end
+
+  def render("transfer.json", %{value: value, user: user, receiver: receiver}) do
+    %{
+      data: %{
+        transferred_value: value,
+        debit_account: user.email,
+        destination_account: receiver.email,
+        current_balance: user.balance,
+      }
+    }
+  end
 end
