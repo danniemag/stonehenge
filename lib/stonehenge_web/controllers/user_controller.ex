@@ -56,4 +56,71 @@ defmodule StonehengeWeb.UserController do
         |> render(StonehengeWeb.ErrorView, "401.json", message: message)
     end
   end
+
+  def sign_out(conn, _) do
+    conn
+    |> delete_session(:current_user_id)
+    |> put_status(:ok)
+    |> render(StonehengeWeb.UserView, "sign_out.json", message: "Successfully logged out")
+  end
+
+  def balance(conn, _params) do
+    user = Auth.get_user!(get_session(conn, :current_user_id))
+    render(conn, "balance.json", user: user)
+  end
+
+  def withdrawal(conn, %{"value" => value}) do
+    cond do
+      user = Auth.get_user!(get_session(conn, :current_user_id)) ->
+        cond do
+          user.balance >= value -> {:ok, perform_withdrawal(conn, value, user)}
+        end
+        insufficient_balance()
+    end
+    conn
+      |> delete_session(:current_user_id)
+      |> put_status(:unauthorized)
+      |> render(StonehengeWeb.ErrorView, "401.json", message: "No user logged!")
+  end
+
+  def transfer(conn, %{"email" => email, "value" => value}) do
+    cond do
+      receiver = Stonehenge.Repo.get_by(User, email: email) ->
+        cond do
+          user = Auth.get_user!(get_session(conn, :current_user_id)) ->
+            cond do
+              user.balance >= value -> {:ok, perform_transfer(conn, value, user, receiver)}
+            end
+            insufficient_balance()
+        end
+    end
+  end
+
+  # Helper methods - No routes
+  def perform_withdrawal(conn, value, user) do
+    user
+      |> Ecto.Changeset.change(%{balance: user.balance - value})
+      |> Stonehenge.Repo.update()
+      user = Auth.get_user!(user.id)
+      render conn, "withdrawal.json", value: value, user: user
+  end
+
+  def insufficient_balance() do
+    render(StonehengeWeb.ErrorView, "203.json", message: "Insufficient balance to perform this operation.")
+  end
+
+  def perform_transfer(conn, value, user, receiver) do
+    receiver
+      |> Ecto.Changeset.change(%{balance: receiver.balance + value})
+      |> Stonehenge.Repo.update()
+    user
+      |> Ecto.Changeset.change(%{balance: user.balance - value})
+      |> Stonehenge.Repo.update()
+      user = Auth.get_user!(user.id)
+      render conn, "transfer.json", value: value, user: user, receiver: receiver
+  end
+
+  def receiver_not_found() do
+    render(StonehengeWeb.ErrorView, "203.json", message: "Receiver not found")
+  end
 end
