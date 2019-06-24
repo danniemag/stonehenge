@@ -57,6 +57,13 @@ defmodule StonehengeWeb.UserController do
     end
   end
 
+  def sign_out(conn, _) do
+    conn
+    |> delete_session(:current_user_id)
+    |> put_status(:ok)
+    |> render(StonehengeWeb.UserView, "sign_out.json", message: "Successfully logged out")
+  end
+
   def balance(conn, _params) do
     user = Auth.get_user!(get_session(conn, :current_user_id))
     render(conn, "balance.json", user: user)

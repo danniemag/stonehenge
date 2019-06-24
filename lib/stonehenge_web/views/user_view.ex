@@ -28,6 +28,12 @@ defmodule StonehengeWeb.UserView do
     }
   end
 
+  def render("sign_out.json", %{message: message}) do
+    %{
+      message: message
+    }
+  end
+
   def render("balance.json", %{user: user}) do
     %{
       data: %{

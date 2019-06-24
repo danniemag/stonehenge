@@ -13,13 +13,15 @@ defmodule StonehengeWeb.Router do
   scope "/api", StonehengeWeb do
     pipe_through :api
     post "/users/sign_in", UserController, :sign_in
+    post "/users/sign_out", UserController, :sign_out
   end
 
   scope "/api", StonehengeWeb do
     pipe_through [:api, :api_auth]
-    get "/users/balance/", UserController, :balance
+    get "/users/balance", UserController, :balance
+    put "/users/withdrawal", UserController, :withdrawal
     resources "/users", UserController, except: [:new, :edit]
-    post "/users/withdrawal", UserController, :withdrawal
+
   end
 
   defp ensure_authenticated(conn, _opts) do
