@@ -60,7 +60,7 @@ defmodule StonehengeWeb.UserView do
         transferred_value: value,
         debit_account: user.email,
         destination_account: receiver.email,
-        current_balance: user.balance,
+        current_balance: user.balance
       }
     }
   end
