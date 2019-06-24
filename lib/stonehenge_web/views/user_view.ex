@@ -28,6 +28,16 @@ defmodule StonehengeWeb.UserView do
     }
   end
 
+  def render("balance.json", %{user: user}) do
+    %{
+      data: %{
+        current_user_id: user.id,
+        current_user_email: user.email,
+        current_balance: user.balance,
+      }
+    }
+  end
+
   def render("withdrawal.json", %{user: user}) do
     %{
       data: %{

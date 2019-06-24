@@ -57,6 +57,12 @@ defmodule StonehengeWeb.UserController do
     end
   end
 
+  def balance(conn, _params) do
+    user = Auth.get_user!(get_session(conn, :current_user_id))
+    render(conn, "balance.json", user: user)
+  end
+
+
   def withdrawal(conn, %{"value" => value}) do
     cond do
       user = Auth.get_user!(get_session(conn, :current_user_id)) ->

@@ -17,6 +17,7 @@ defmodule StonehengeWeb.Router do
 
   scope "/api", StonehengeWeb do
     pipe_through [:api, :api_auth]
+    get "/users/balance/", UserController, :balance
     resources "/users", UserController, except: [:new, :edit]
     post "/users/withdrawal", UserController, :withdrawal
   end
