@@ -12,6 +12,8 @@ defmodule StonehengeWeb.HistoryController do
   end
 
   def backoffice(conn, _params) do
+    ensure_backoffice_security(conn)
+
     import Ecto.Query
 
     today = DateTime.utc_now()
@@ -40,5 +42,16 @@ defmodule StonehengeWeb.HistoryController do
                                     debit_sum_current_month: debit_sum_current_month, 
                                     credit_sum_current_year: credit_sum_current_year, 
                                     debit_sum_current_year: debit_sum_current_year)
+  end
+
+
+  # ------- Helper methods | No routes
+  def ensure_backoffice_security(conn) do
+    user = Stonehenge.Auth.get_user!(get_session(conn, :current_user_id))
+    cond do
+      user.email != "admin@stonehenge.com" ->
+        render(conn, "exception.json", message: "No permission to access this resouce")
+        true -> {:ok}
+    end
   end
 end

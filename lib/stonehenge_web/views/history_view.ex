@@ -41,4 +41,11 @@ defmodule StonehengeWeb.HistoryView do
       }
     }
   end
+
+
+    # ------- UserController Exceptions
+
+    def render("exception.json", %{message: message}) do
+      %{errors: %{detail: message}}
+    end
 end
