@@ -13,6 +13,7 @@ config :stonehenge, StonehengeWeb.Endpoint,
 
 # Configure your database
 config :stonehenge, Stonehenge.Repo,
+  ssl: true,
   username: "postgres",
   password: "postgres",
   database: "stonehenge_prod",
