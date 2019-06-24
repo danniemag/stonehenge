@@ -10,12 +10,18 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-password = "Rock2019*"
-
 Stonehenge.Repo.insert!(
     %Stonehenge.Auth.User{
         email: "admin@stonehenge.com",
-        password: password,
-        password_hash: Bcrypt.hash_pwd_salt(password),
+        password: "Rock2019*",
+        password_hash: Bcrypt.hash_pwd_salt("Rock2019*"),
         balance: 0.0
+})
+
+Stonehenge.Repo.insert!(
+    %Stonehenge.Auth.User{
+        email: "lorem@ipsum.com",
+        password: "abc123",
+        password_hash: Bcrypt.hash_pwd_salt("abc123"),
+        balance: 1000.0
 })

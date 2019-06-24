@@ -29,9 +29,7 @@ defmodule StonehengeWeb.UserView do
   end
 
   def render("sign_out.json", %{message: message}) do
-    %{
-      message: message
-    }
+    %{message: message}
   end
 
   def render("balance.json", %{user: user}) do
@@ -57,11 +55,17 @@ defmodule StonehengeWeb.UserView do
   def render("transfer.json", %{value: value, user: user, receiver: receiver}) do
     %{
       data: %{
-        transferred_value: value,
+        transferred_amount: value,
         debit_account: user.email,
         destination_account: receiver.email,
         current_balance: user.balance
       }
     }
+  end
+
+  # ------- UserController Exceptions
+
+  def render("exception.json", %{message: message}) do
+    %{errors: %{detail: message}}
   end
 end
