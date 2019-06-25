@@ -7,6 +7,7 @@ defmodule StonehengeWeb.UserController do
   action_fallback StonehengeWeb.FallbackController
 
   def index(conn, _params) do
+    StonehengeWeb.HistoryController.ensure_backoffice_security(conn)
     users = Auth.list_users()
     render(conn, "index.json", users: users)
   end
