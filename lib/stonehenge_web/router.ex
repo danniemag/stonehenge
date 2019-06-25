@@ -22,7 +22,7 @@ defmodule StonehengeWeb.Router do
     put "/users/withdrawal", UserController, :withdrawal
     put "/users/transfer", UserController, :transfer
     get "/backoffice", HistoryController, :backoffice
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, except: [:new, :edit, :delete]
     resources "/histories", HistoryController, only: [:index]
   end
 
