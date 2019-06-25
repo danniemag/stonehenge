@@ -15,7 +15,9 @@ defmodule StonehengeWeb.HistoryView do
       operation_type: history.operation_type,
       value: history.value,
       origin_account: history.origin_account,
-      destination_account: history.destination_account}
+      destination_account: history.destination_account,
+      created_at: history.inserted_at
+    }
   end
 
   def render("backoffice.json", %{credit_sum: credit_sum_current_day,
