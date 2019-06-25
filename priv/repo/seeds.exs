@@ -25,3 +25,11 @@ Stonehenge.Repo.insert!(
         password_hash: Bcrypt.hash_pwd_salt("abc123"),
         balance: 1000.0
 })
+
+Stonehenge.Repo.insert!(
+    %Stonehenge.Auth.User{
+        email: "stark@ipsum.com",
+        password: "abc123",
+        password_hash: Bcrypt.hash_pwd_salt("abc123"),
+        balance: 1000.0
+})
