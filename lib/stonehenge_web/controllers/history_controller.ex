@@ -7,6 +7,7 @@ defmodule StonehengeWeb.HistoryController do
   action_fallback StonehengeWeb.FallbackController
 
   def index(conn, _params) do
+    ensure_backoffice_security(conn)
     histories = Backoffice.list_histories()
     render(conn, "index.json", histories: histories)
   end
